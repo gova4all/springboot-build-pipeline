@@ -36,22 +36,22 @@ pipeline {
       }
     }
 
-    /*
+    
     stage('Stage III: SCA') {
       steps { 
         echo "Running Software Composition Analysis ..."
+        withCredentials([string(credentialsId: 'SonarQube_Creds', variable: 'SONAR_TOKEN')])
         sh """
            export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
            mvn org.owasp:dependency-check-maven:check
         """
       }
     }
-    */
+    
 
     stage('Stage IV: SAST') {
   steps { 
     echo "Running Static Application Security Testing (SonarQube)..."
-
     withCredentials([string(credentialsId: 'SonarQube_Creds', variable: 'SONAR_TOKEN')]) {
       withSonarQubeEnv('mysonarqube') {
 
