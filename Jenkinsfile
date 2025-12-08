@@ -49,24 +49,25 @@ pipeline {
     */
 
     stage('Stage IV: SAST') {
-      steps { 
-        echo "Running Static Application Security Testing (SonarQube)..."
+  steps { 
+    echo "Running Static Application Security Testing (SonarQube)..."
 
-        withCredentials([string(credentialsId: 'SonarQube_Creds', variable: 'SONAR_TOKEN')]) {
-          withSonarQubeEnv('mysonarqube') {
-            sh """
-              mvn sonar:sonar \
-                -Dsonar.login=$SONAR_TOKEN \
-                -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
-                -Dsonar.dependencyCheck.jsonReportPath=target/dependency-check-report.json \
-                -Dsonar.dependencyCheck.htmlReportPath=target/dependency-check-report.html \
-                -Dsonar.projectName=wezvatech \
-                -Dsonar.projectKey=wezvatech
-            """
-          }
-        }
+    withCredentials([string(credentialsId: 'SonarQube_Creds', variable: 'SONAR_TOKEN')]) {
+      withSonarQubeEnv('mysonarqube') {
+
+        sh '''
+          mvn sonar:sonar \
+            -Dsonar.projectKey=wezvatech \
+            -Dsonar.projectName=wezvatech \
+            -Dsonar.login=$SONAR_TOKEN \
+            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
+            -Dsonar.dependencyCheck.jsonReportPath=target/dependency-check-report.json \
+            -Dsonar.dependencyCheck.htmlReportPath=target/dependency-check-report.html
+        '''
       }
     }
+  }
+}
 
     stage('Stage V: Quality Gates') {
       steps {
