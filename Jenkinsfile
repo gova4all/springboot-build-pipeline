@@ -27,22 +27,21 @@ pipeline {
       }
     }
 
-   stage('Stage III: SCA') {
+   /* stage('Stage III: SCA') {
       steps { 
         echo "Running Software Composition Analysis using OWASP Dependency-Check ..."
         sh "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64; mvn org.owasp:dependency-check-maven:check"
       }
-    }
+    } */
 
-   /*stage('Stage IV: SAST') {
+   stage('Stage IV: SAST') {
       steps { 
         echo "Running Static application security testing using SonarQube Scanner ..."
-        withCredentials([string(credentialsId: 'SonarQube_Creds', variable: 'SONAR_TOKEN')])
         withSonarQubeEnv('mysonarqube') {
             sh 'mvn sonar:sonar -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml -Dsonar.dependencyCheck.jsonReportPath=target/dependency-check-report.json -Dsonar.dependencyCheck.htmlReportPath=target/dependency-check-report.html -Dsonar.projectName=wezvatech'
        }
       }
-    }*/
+    }
 
    stage('Stage V: QualityGates') {
       steps { 
