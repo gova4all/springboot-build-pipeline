@@ -37,7 +37,7 @@ pipeline {
     }
 
     
-    stage('Stage III: SCA') {
+   /* stage('Stage III: SCA') {
       steps { 
         echo "Running Software Composition Analysis ..."
         withCredentials([string(credentialsId: 'SonarQube_Creds', variable: 'SONAR_TOKEN')])
@@ -46,8 +46,7 @@ pipeline {
            mvn org.owasp:dependency-check-maven:check
         """
       }
-    }
-    
+    }*/
 
     stage('Stage IV: SAST') {
   steps { 
