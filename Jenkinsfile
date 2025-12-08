@@ -128,34 +128,36 @@ pipeline {
     /* -------------------------------------------------------------
        NEW STAGE X – Deploy to EC2
        ------------------------------------------------------------- */
-    stage('Stage X: Deploy to EC2 Instance') {
-      environment {
-        AWS_REGION = "us-east-1"
-        AWS_ACCOUNT = "494249241115"
+stage('Stage X: Deploy to EC2 Instance') {
+    environment {
+        AWS_REGION = "ap-south-1"
+        AWS_ACCOUNT = "123456789012"
         ECR_REPO = "gova4all"
         EC2_USER = "ubuntu"
-        EC2_HOST = "172.31.24.85"
-      }
-      steps {
-        echo "Deploying Docker Container into EC2..."
-        sshagent(credentials: ['ec2-ssh-key']) {
-          sh """
-            ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} '
-              aws ecr get-login-password --region ${AWS_REGION} \
-              | docker login --username AWS --password-stdin ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com
-
-              docker pull ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}:latest
-
-              docker stop gova4all || true
-              docker rm gova4all || true
-
-              docker run -d --name gova4all -p 8080:8080 \
-              ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}:latest
-            '
-          """
-        }
-      }
+        EC2_HOST = "10.10.10.10"
     }
+    steps {
+        echo "Deploying Docker Container to EC2 using sshCommand..."
+
+        sshCommand remote: [
+            host: "${EC2_HOST}",
+            user: "${EC2_USER}",
+            identityFile: "/var/lib/jenkins/.ssh/id_rsa",   // <-- your private key path
+            allowAnyHosts: true
+        ], command: """
+            aws ecr get-login-password --region ${AWS_REGION} \
+            | docker login --username AWS --password-stdin ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com
+
+            docker pull ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}:latest
+
+            docker stop gova4all || true
+            docker rm gova4all || true
+
+            docker run -d --name gova4all -p 8080:8080 \
+            ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}:latest
+        """
+    }
+}
 
   } // stages end
 }
