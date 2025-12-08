@@ -112,7 +112,7 @@ pipeline {
       }
       steps {
         echo "Pushing Image to AWS ECR..."
-        withAWS(credentials: 'aws-creds', region: "${AWS_REGION}") {
+        withAWS(credentials: 'AWS_CREDS', region: "${AWS_REGION}") {
           sh """
             aws ecr get-login-password --region ${AWS_REGION} \
             | docker login --username AWS --password-stdin ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com
