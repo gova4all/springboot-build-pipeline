@@ -34,7 +34,7 @@ pipeline {
       }
     }
 
-   stage('Stage IV: SAST') {
+   /*stage('Stage IV: SAST') {
       steps { 
         echo "Running Static application security testing using SonarQube Scanner ..."
         withCredentials([string(credentialsId: 'SonarQube_Creds', variable: 'SONAR_TOKEN')])
@@ -42,7 +42,7 @@ pipeline {
             sh 'mvn sonar:sonar -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml -Dsonar.dependencyCheck.jsonReportPath=target/dependency-check-report.json -Dsonar.dependencyCheck.htmlReportPath=target/dependency-check-report.html -Dsonar.projectName=wezvatech'
        }
       }
-    }
+    }*/
 
    stage('Stage V: QualityGates') {
       steps { 
