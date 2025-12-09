@@ -36,19 +36,16 @@ pipeline {
       }
     }
   stage('Stage III: SCA') {
-    steps { 
-        echo "Running Software Composition Analysis ..."
-
-        sh """
-            export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
-            mvn org.owasp:dependency-check-maven:check \
-                -Danalyzer.nvd.api.enabled=false \
-                -Danalyzer.nvd.api.fetch=false \
-                -Danalyzer.nvd.api.failOnError=false \
-                -DnvdApiEnabled=false \
-                -DfailOnError=false
-        """
-    }
+  steps {
+    sh """
+      export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+      mvn org.owasp:dependency-check-maven:check \
+        -Danalyzer.nvd.api.enabled=false \
+        -Danalyzer.nvd.api.fetch=false \
+        -Danalyzer.nvd.api.failOnError=false \
+        -DfailOnError=false
+    """
+  }
 }
 
 
