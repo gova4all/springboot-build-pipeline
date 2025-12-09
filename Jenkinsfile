@@ -158,7 +158,7 @@ pipeline {
     /* -------------------------------------------------------------
        NEW STAGE X – Deploy to EC2
        ------------------------------------------------------------- */
-stage('Stage X: Deploy to EC2 Instance') {
+/*stage('Stage X: Deploy to EC2 Instance') {
     environment {
         AWS_REGION = "ap-south-1"
         AWS_ACCOUNT = "123456789012"
@@ -187,7 +187,7 @@ stage('Stage X: Deploy to EC2 Instance') {
             ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}:latest
         """
     }
-}
+}*/
 
-  } // stages end
+  } // stages end 
 }
