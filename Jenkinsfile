@@ -114,10 +114,7 @@ pipeline {
             CONTAINER_ID=\$(docker run -d --name smokerun -p 0:8080 mxr087/gova4all:latest)
             echo "Container started: \$CONTAINER_ID"
 
-            # Sleep to allow the app to start
-            sleep 20
-
-            # Extract mapped random host port
+            # Extract mapped random host port (e.g. 32768)
             PORT=\$(docker port smokerun | sed 's/.*://')
             echo "App is running on port: \$PORT"
 
@@ -130,6 +127,7 @@ pipeline {
         """
     }
 }
+
 
 
 
