@@ -1,23 +1,29 @@
 #!/bin/bash
 
-curl -is --max-redirs 10 http://localhost:8080 -L | grep -w "HTTP/1.1 200" > /dev/null
-if [ $? -ne "0" ]; then
+PORT=$1
+
+if [ -z "$PORT" ]; then
+   echo "ERROR: Port argument missing!"
+   echo "Usage: ./check.sh <PORT>"
+   exit 1
+fi
+
+echo "Checking application on port: $PORT"
+
+# Try to reach the application
+curl -is --max-redirs 10 http://localhost:$PORT -L | grep -w "HTTP/1.1 200" > /dev/null
+if [ $? -ne 0 ]; then
    echo "============================================================="
-   echo "Unable to reach sample springboot application on port 8080 !!"
+   echo "Unable to reach Spring Boot application on port $PORT !!"
    echo "============================================================="
+   exit 1
 else
    echo "================="
    echo "Smoke Test passed"
    echo "================="
 fi
 
-grep "CRITICAL" trivyresults.txt > /dev/null
-if [ $? -ne "0" ]; then
+# Check Trivy scan results
+if grep -q "CRITICAL" trivyresults.txt; then
    echo "============================================================="
-   echo "Docker Image adamtravis/democicd:latest is ready for testing"
-   echo "============================================================="
-else
-   echo "============================================================="
-   echo "Docker Image adamtravis/democicd:latest has vulnerabilities!!"
-   echo "============================================================="
-fi
+   echo "Docker Image has CRITICAL vulnerabilit

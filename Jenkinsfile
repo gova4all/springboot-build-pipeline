@@ -103,16 +103,35 @@ pipeline {
     }
 
     stage('Stage VIII: Smoke Test') {
-      steps {
-        echo "Running Smoke Test..."
+    steps {
+        echo "Running Smoke Test with Auto Port..."
+
         sh """
-          docker run -d --name smokerun-1 -p 8080:8080 mxr087/gova4all:latest
-          sleep 90
-          ./check.sh
-          docker rm --force smokerun-1
+            # Remove old container if exists
+            docker rm -f smokerun || true
+
+            # Run container with a random free port
+            CONTAINER_ID=\$(docker run -d --name smokerun -p 0:8080 mxr087/gova4all:latest)
+            echo "Container started: \$CONTAINER_ID"
+
+            # Sleep to allow the app to start
+            sleep 20
+
+            # Extract mapped random host port
+            PORT=\$(docker port smokerun | sed 's/.*://')
+            echo "App is running on port: \$PORT"
+
+            # Run smoke test with dynamic port
+            chmod +x ./check.sh
+            ./check.sh \$PORT
+
+            # Cleanup the container
+            docker rm -f smokerun || true
         """
-      }
     }
+}
+
+
 
     /* -------------------------------------------------------------
        NEW STAGE IX – Build & Push Image to AWS ECR
