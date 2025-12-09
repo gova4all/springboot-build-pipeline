@@ -139,17 +139,15 @@
 			<plugin>
 				<groupId>org.owasp</groupId>
 				<artifactId>dependency-check-maven</artifactId>
-				<version>12.1.0</version>
+				<version>8.4.0</version>
 
 				<!-- SINGLE configuration block (merged) -->
 				<configuration>
-					<nvdApiEnabled>false</nvdApiEnabled>
 					<failOnError>false</failOnError>
-
-					<!-- report formats -->
+					<nvdApiEnabled>false</nvdApiEnabled>
 					<formats>
-						<format>json</format>
-						<format>html</format>
+						<format>HTML</format>
+						<format>JSON</format>
 					</formats>
 				</configuration>
 
