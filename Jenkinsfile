@@ -106,10 +106,10 @@ pipeline {
       steps {
         echo "Running Smoke Test..."
         sh """
-          docker run -d --name smokerun -p 8080:8080 mxr087/gova4all:latest
+          docker run -d --name smokerun-1 -p 8080:8080 mxr087/gova4all:latest
           sleep 90
           ./check.sh
-          docker rm --force smokerun
+          docker rm --force smokerun-1
         """
       }
     }
