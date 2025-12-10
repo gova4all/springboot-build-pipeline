@@ -167,6 +167,7 @@ stage('Deploy to EC2') {
 
     steps {
         sshCommand remote: [
+            name: "EC2-Server",
             host: "ec2-174-129-104-148.compute-1.amazonaws.com",
             user: "ubuntu",
             sshCredentialsId: "ec2-key",
