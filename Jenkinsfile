@@ -219,7 +219,7 @@ stage('Stage XI: Send Deployment Alerts (SNS)') {
             aws sns publish \
               --topic-arn ${SNS_TOPIC} \
               --subject "Deployment Success: gova4all" \
-              --message "Your Docker application (gova4all) has been deployed successfully on EC2 and is running on port 8080."
+              --message "Your Swagger application (gova4all) has been deployed successfully on EC2 and Please validate this url: http://ec2-174-129-104-148.compute-1.amazonaws.com:8080."
             """
         }
     }
