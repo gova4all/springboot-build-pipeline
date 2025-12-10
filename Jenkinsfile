@@ -206,6 +206,24 @@ stage('Deploy to EC2') {
         """
     }
 }
+stage('Stage XI: Send Deployment Alerts (SNS)') {
+    environment {
+        SNS_TOPIC = "arn:aws:sns:us-east-1:494249241115:app-deployment-alerts"
+    }
+
+    steps {
+        echo "Sending Deployment Notification via SNS..."
+
+        withAWS(credentials: 'AWS_CREDS', region: "us-east-1") {
+            sh """
+            aws sns publish \
+              --topic-arn ${SNS_TOPIC} \
+              --subject "Deployment Success: gova4all" \
+              --message "Your Docker application (gova4all) has been deployed successfully on EC2 and is running on port 8080."
+            """
+        }
+    }
+}
 
   } // stages end 
 }
