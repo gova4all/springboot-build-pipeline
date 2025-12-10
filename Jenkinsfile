@@ -193,8 +193,19 @@ stage('Deploy to EC2') {
             ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}:latest
 
             echo "Health Check..."
-            sleep 5
-            //sudo curl -fsSL http://localhost:8080
+            
+            echo "Health Check..."
+            for i in {1..10}; do
+                echo "Checking app... attempt $i"
+                if sudo curl -fsSL http://localhost:8080 > /dev/null 2>&1; then
+                    echo "App is UP!"
+                    exit 0
+                fi
+                sleep 60
+            done
+
+            echo "App FAILED to start"
+            exit 1
 
         """
     }
