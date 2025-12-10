@@ -166,25 +166,35 @@ stage('Deploy to EC2') {
     }
 
     steps {
-        sshCommand remote: [
-            name: "ubuntu",
+            sshCommand remote: [
+            name: "EC2",
             host: "ec2-174-129-104-148.compute-1.amazonaws.com",
             user: "ubuntu",
             identityFile: "/var/lib/jenkins/.ssh/Ec2_key.pem",
             allowAnyHosts: true
-        ], command: """
-            aws ecr get-login-password --region ${AWS_REGION} \
-            | docker login --username AWS --password-stdin ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com
+        ], 
+        
+        command: """
+            set -e
 
+            echo "Logging into AWS ECR..."
+            aws ecr get-login-password --region ${AWS_REGION} \
+            | sudo docker login --username AWS --password-stdin ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com
+
+            echo "Pulling latest Docker image..."
             sudo docker pull ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}:latest
 
+            echo "Stopping old container..."
             sudo docker stop gova4all || true
             sudo docker rm gova4all || true
 
-
+            echo "Starting new container..."
             sudo docker run -d --name gova4all -p 8080:8080 \
             ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}:latest
-            sudo curl -fsS --max-redirs 10 "http://localhost:8080"
+
+            echo "Health Check..."
+            sleep 5
+            sudo curl -fsS http://localhost:8080
         """
     }
 }
