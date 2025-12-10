@@ -158,21 +158,18 @@ pipeline {
     /* -------------------------------------------------------------
        NEW STAGE X – Deploy to EC2
        ------------------------------------------------------------- */
-/*stage('Stage X: Deploy to EC2 Instance') {
+stage('Deploy to EC2') {
     environment {
-        AWS_REGION = "ap-south-1"
-        AWS_ACCOUNT = "123456789012"
+        AWS_REGION = "us-east-1"
+        AWS_ACCOUNT = "494249241115"
         ECR_REPO = "gova4all"
-        EC2_USER = "ubuntu"
-        EC2_HOST = "10.10.10.10"
     }
-    steps {
-        echo "Deploying Docker Container to EC2 using sshCommand..."
 
+    steps {
         sshCommand remote: [
-            host: "${EC2_HOST}",
-            user: "${EC2_USER}",
-            identityFile: "/var/lib/jenkins/.ssh/id_rsa",   // <-- your private key path
+            host: "ec2-174-129-104-148.compute-1.amazonaws.com",
+            user: "ubuntu",
+            sshCredentialsId: "ec2-key",
             allowAnyHosts: true
         ], command: """
             aws ecr get-login-password --region ${AWS_REGION} \
@@ -187,7 +184,7 @@ pipeline {
             ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}:latest
         """
     }
-}*/
+}
 
   } // stages end 
 }
