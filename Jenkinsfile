@@ -170,19 +170,20 @@ stage('Deploy to EC2') {
             name: "EC2-Server",
             host: "ec2-174-129-104-148.compute-1.amazonaws.com",
             user: "ubuntu",
-            sshCredentialsId: "ec2-key",
+            sshCredentialsId: "Ec2",
             allowAnyHosts: true
         ], command: """
             aws ecr get-login-password --region ${AWS_REGION} \
             | docker login --username AWS --password-stdin ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com
 
-            docker pull ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}:latest
+            sudo docker pull ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}:latest
 
-            docker stop gova4all || true
-            docker rm gova4all || true
+            sudo docker stop gova4all || true
+            sudo docker rm gova4all || true
 
-            docker run -d --name gova4all -p 8080:8080 \
+            sudo docker run -d --name gova4all -p 8080:8080 \
             ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}:latest
+            sudo curl -fsS --max-redirs 10 "http://localhost:8080"
         """
     }
 }
