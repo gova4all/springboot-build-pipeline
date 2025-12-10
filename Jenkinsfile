@@ -166,14 +166,13 @@ stage('Deploy to EC2') {
     }
 
     steps {
-            sshCommand remote: [
+        sshCommand remote: [
             name: "EC2",
             host: "ec2-174-129-104-148.compute-1.amazonaws.com",
             user: "ubuntu",
             identityFile: "/var/lib/jenkins/.ssh/Ec2_key.pem",
             allowAnyHosts: true
-        ], 
-        
+        ],
         command: """
             set -e
 
@@ -190,23 +189,20 @@ stage('Deploy to EC2') {
 
             echo "Starting new container..."
             sudo docker run -d --name gova4all -p 8080:8080 \
-            ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}:latest
+                ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}:latest
 
             echo "Health Check..."
-            
-            echo "Health Check..."
             for i in {1..10}; do
-                echo "Checking app... attempt $i"
+                echo "Checking app... attempt \$i"
                 if sudo curl -fsSL http://localhost:8080 > /dev/null 2>&1; then
                     echo "App is UP!"
                     exit 0
                 fi
-                sleep 60
+                sleep 10
             done
 
             echo "App FAILED to start"
             exit 1
-
         """
     }
 }
