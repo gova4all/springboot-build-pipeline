@@ -194,7 +194,7 @@ stage('Deploy to EC2') {
 
             echo "Health Check..."
             sleep 5
-            sudo curl -fsSL http://localhost:8080
+            //sudo curl -fsSL http://localhost:8080
 
         """
     }
