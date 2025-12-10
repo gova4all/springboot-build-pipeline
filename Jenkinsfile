@@ -181,6 +181,7 @@ stage('Deploy to EC2') {
             sudo docker stop gova4all || true
             sudo docker rm gova4all || true
 
+
             sudo docker run -d --name gova4all -p 8080:8080 \
             ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}:latest
             sudo curl -fsS --max-redirs 10 "http://localhost:8080"
