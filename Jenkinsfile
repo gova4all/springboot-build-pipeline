@@ -170,7 +170,7 @@ stage('Deploy to EC2') {
             name: "ubuntu",
             host: "ec2-174-129-104-148.compute-1.amazonaws.com",
             user: "ubuntu",
-            sshCredentialsId: "Ec2",
+            sshCredentialsId: "ec2",
             allowAnyHosts: true
         ], command: """
             aws ecr get-login-password --region ${AWS_REGION} \
